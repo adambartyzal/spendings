@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+   {% if title %}
+   <title>{{ title }} - Spendings</title>
+   {% else %}
+   <title>Welcome to Spendings</title>
+   {% endif %}
+  </head>
+  <body>
+    <div>Spendings:
+      <a href="/transactions">Transactions</a>
+      <a href="/categories">Categories</a>
+      <a href="/login">Login</a>
+    </div>
+    <hr>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </body>
+</html>

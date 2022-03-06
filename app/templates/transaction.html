@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1> {{ title }} </h1>
+    <div><p>Name: {{ transaction.name }} </p></div>
+    <div><p>Type: {{ types[transaction.type_id].name }} </p></div>
+    <div><p>Category: {{ categories[transaction.category_id].name }} </p></div>
+
+{% endblock %}

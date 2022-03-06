@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1> {{ title }} </h1>
+    {% for transaction in transactions %}
+    <div><p>Name: {{ transaction.name }}, Type:  {{types[transaction.id].name}}, Amount:  {{transaction.amount}}, <a href="/transaction/{{ transaction.id }}">Detail</a> </b></p></div>
+    {% endfor %}
+    <div>
+      <a href="/transaction_new">New Transaction</a>
+    </div>
+{% endblock %}
