@@ -7,7 +7,7 @@
   --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
 
   /* Body font size. By default, effectively 18.4px, based on 16px as 'root em' */
-  --base-fontsize: 1.15rem;
+  --base-fontsize: 0.9rem;
 
   /* Major third scale progression - see https://type-scale.com/ */
   --header-scale: 1.25;
@@ -520,6 +520,17 @@ pre code {
   color: green;
   font-weight: bold;
   text-align: right
+}
+
+.blue {
+  color: teal;
+  font-weight: bold;
+  text-align: right
+}
+
+.right_small {
+  text-align: right;
+  font-size: small
 }
 
 .invert{

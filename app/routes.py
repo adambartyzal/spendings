@@ -6,6 +6,7 @@ from werkzeug.urls import url_parse
 from app.forms import NewTransactionForm, NewCategoryForm, DateRange
 from app.models import Transaction, Transaction_type, Category
 from wtforms import Label
+import csv
 
 @app.template_filter('date_only')
 def datetime_format(value, format="%d. %m. %y"):
@@ -27,6 +28,16 @@ def index():
 
 @app.route('/categories', methods=['GET'])
 def categories():
+
+#  with open('/home/adam/codes/spendings/transaction_spendee.csv') as csv_file:
+#    csv_reader = csv.reader(csv_file, delimiter=',')
+#    line_count = 0
+#    print('id,name,amount,timestamp,user_id,category_id,type_id,date')
+#    for row in csv_reader:
+#      transaction = Transaction(name=row[4], amount=float(row[3]), type_id=int(row[1]), category_id=int(row[2]), date=datetime.datetime.fromisoformat(row[0]))
+#      db.session.add(transaction)
+#      db.session.commit()
+
   categories = Category.query.all()
   return render_template('categories.html', title='Categories', categories=categories)
 
@@ -62,12 +73,7 @@ def transaction_detail(transaction_id):
   form = NewTransactionForm(type_id = transaction.type_id, category_id=transaction.category_id)
   form.type_id.choices = [(type.id, type.name) for type in Transaction_type.query.all()]
   form.category_id.choices = [(category.id, category.name) for category in Category.query.all()]
-  form.type_id.default = transaction.type_id
-  form.category_id.default = transaction.category_id
-  form.date.data = transaction.date
-  form.name.data = transaction.name
-  form.amount.data = transaction.amount
-  form.submit.label = Label(form.submit.id, 'Edit transaction')
+  edit = True
   if form.validate_on_submit():
     transaction.name = form.name.data
     transaction.amount = float(form.amount.data)
@@ -77,7 +83,13 @@ def transaction_detail(transaction_id):
     db.session.commit()
     flash(f'Transaction {form.name.data} changed')
     return redirect('/transactions')
-  return render_template('transaction.html', title='Transaction detail', form=form)
+  form.type_id.default = transaction.type_id
+  form.category_id.default = transaction.category_id
+  form.date.data = transaction.date
+  form.name.data = transaction.name
+  form.amount.data = transaction.amount
+  form.submit.label = Label(form.submit.id, 'Edit transaction')
+  return render_template('transaction.html', title='Transaction detail', form=form, edit=edit, id=transaction.id)
 
 @app.route('/transaction/new', methods=['GET', 'POST'],)
 def transaction_new():
@@ -103,25 +115,27 @@ def transaction_delete(id):
   return redirect(url_for('transactions'))
 
 class Statement:
-	def __init__(self):
-		self.spent = 0
-		self.gained = 0
-
-def calculate_statement(transactions):
-  s = Statement()
-  for transaction in transactions:
-    if (transaction.type_id == 1):
-      s.spent += transaction.amount
-    else:
-      s.gained += transaction.amount
-  return s
+  def __init__(self, transactions, categories):
+    self.expense_total = 0
+    self.income_total = 0
+    self.expense_in_categories = [0] * len(categories)
+    self.income_in_categories = [0] * len(categories)
+    for transaction in transactions:
+      if (transaction.type_id == 1):
+        self.expense_in_categories[transaction.category_id - 1] += transaction.amount
+      if (transaction.type_id == 2):
+        self.income_in_categories[transaction.category_id - 1] += transaction.amount
+    self.expense_total = sum(self.expense_in_categories)
+    self.income_total = sum(self.income_in_categories)
+    self.period_change = self.income_total - self.expense_total
 
 @app.route('/overview', methods=['GET', 'POST'])
 def overview():
   form = DateRange()
   transactions = db.session.query(Transaction).filter(Transaction.date.between( form.date_from.data, form.date_to.data + datetime.timedelta(days=1))).all()
-  statement = calculate_statement(transactions)
+  categories = Category.query.all()
+  statement = Statement(transactions, categories)
   if form.validate_on_submit():
     transactions = db.session.query(Transaction).filter(Transaction.date.between( form.date_from.data, form.date_to.data + datetime.timedelta(days=1))).all()
-    statement = calculate_statement(transactions)
-  return render_template('overview.html', title='Overview', transactions=transactions, form=form, statement=statement)
+    statement = Statement(transactions, categories)
+  return render_template('overview.html', title='Overview', transactions=transactions, categories=categories, form=form, statement=statement)

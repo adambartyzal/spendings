@@ -11,4 +11,7 @@
     <p>{{ form.amount.label }}<br>{{ form.amount(size=32) }}</p>
     <p>{{ form.submit() }}</p>
   </form>
+  {% if edit %}
+  <p><a href="/transaction/{{ id }}/delete"><button>Delete Transaction</button></a></p>
+  {% endif %}
 {% endblock %}
