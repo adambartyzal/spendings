@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1> {{ title }} </h1>
+    <h3> {{ title }} </h3>
     {% for category in categories %}
     <div><p>Name: {{ category.name }}, <a href="/category/{{ category.id }}">Detail</a> </b></p></div>
+    <img src="/static/images/{{ category.icon_name }}" width=50 class="invert">
     {% endfor %}
     <div>
-      <a href="/category_new">New Category</a>
+      <a href="/category/new"><button>New Category</button></a>
     </div>
 {% endblock %}

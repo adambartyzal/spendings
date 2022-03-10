@@ -1,12 +1,8 @@
+from datetime import date
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired
-
-class LoginForm(FlaskForm):
-  username = StringField('Username', validators=[DataRequired()])
-  password = PasswordField('Password', validators=[DataRequired()])
-  remember_me = BooleanField('Remember Me')
-  submit = SubmitField('Sign In')
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
+from wtforms.fields import DateField,DateTimeField
+from wtforms.validators import ValidationError, DataRequired
 
 class NewCategoryForm(FlaskForm):
   new_category_name = StringField('Name', validators=[DataRequired()])
@@ -16,6 +12,12 @@ class NewCategoryForm(FlaskForm):
 class NewTransactionForm(FlaskForm):
   name = StringField('Name', validators=[DataRequired()])
   amount = StringField('Amount', validators=[DataRequired()])
-  type_id = StringField('Type id', validators=[DataRequired()])
-  category_id = StringField('Category id', validators=[DataRequired()])
+  type_id = SelectField('Type', validators=[DataRequired()])
+  category_id = SelectField('Category', validators=[DataRequired()])
+  date = DateField('Date', format='%Y-%m-%d', default=date.today)
   submit = SubmitField('Add transaction')
+
+class DateRange(FlaskForm):
+  date_from = DateField('From', format='%Y-%m-%d', default=date.today().replace(day=1))
+  date_to = DateField('To', format='%Y-%m-%d', default=date.today)
+  submit = SubmitField('Show selected')

@@ -1,11 +1,46 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1> {{ title }} </h1>
+  <h3> {{title}} </h3>
+  <div>
+    <a href="/transaction/new"><button>New Transaction</button></a>
+  </div>
+  <br>
+  <form method="post">
+    {{ form.hidden_tag() }}
+    <p>{{ form.date_from.label }}<br>{{ form.date_from() }}</p>
     {% for transaction in transactions %}
-    <div><p>Name: {{ transaction.name }}, Type:  {{types[transaction.id].name}}, Amount:  {{transaction.amount}}, <a href="/transaction/{{ transaction.id }}">Detail</a> </b></p></div>
+      <table>
+        {% if loop.index0 == 0  %}
+          <tr class="gray">
+            <td>{{ transaction.date|month_text }}</td>
+          </tr>
+        {% elif loop.index0 > 0 and loop.previtem.date != transaction.date  %}
+          <tr class="gray">
+            <td>{{ transaction.date|month_text }}</td>
+          </tr>
+        {% endif %}
+      </table>
+      <table>
+        <tr data-href="/transaction/{{ transaction.id }}">
+          <td width="10%"><img src="/static/images/{{ categories[transaction.category_id -1].icon_name }}" width=35 class="invert"></img></td>
+          <td>{{ transaction.name }}</td>
+          <td class="{{'red' if transaction.type_id == 1 else 'green'}}">{{ transaction.amount }} Kč</td>
+        </tr>
+      </table>
     {% endfor %}
-    <div>
-      <a href="/transaction_new">New Transaction</a>
-    </div>
+      <p>{{ form.date_to.label }}<br>{{ form.date_to() }}</p>
+      <p>{{ form.submit() }}</p>
+    </form>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const rows = document.querySelectorAll("tr[data-href]");
+        rows.forEach(row => {
+          row.addEventListener("click", () => {
+            window.location.href = row.dataset.href;
+          });
+        });
+      });
+    </script>
+
 {% endblock %}

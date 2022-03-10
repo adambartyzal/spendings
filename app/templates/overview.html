@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h3> {{ title }} </h3>
+  <form method="post">
+    {{ form.hidden_tag() }}
+    <p>{{ form.date_from.label }}<br>{{ form.date_from() }}</p>
+    <p>{{ form.date_to.label }}<br>{{ form.date_to() }}</p>
+    <p>{{ form.submit() }}</p>
+  </form>
+  <p class="red">Spent: {{ statement.spent }} Kč</p>
+  <p class="green">Gained: {{ statement.gained }} Kč</p>
+{% endblock %}
