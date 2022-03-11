@@ -1,3 +1,5 @@
+.vscode/*
+backups/*
 env/*
 migrations/*
 __pycache__

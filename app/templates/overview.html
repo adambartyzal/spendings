@@ -1,40 +1,43 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h3> {{ title }} </h3>
-  <form method="post">
-    <p>{{ form.date_from.label }}: <br>{{ form.date_from() }}</p>
-    <p>{{ form.date_to.label }}: <br>{{ form.date_to() }}</p>
-    <p>{{ form.submit() }}</p>
-  </form>
-  <div>Total Period change:  <span  class="{{ 'red' if statement.period_change <= 0 else 'green' }}">{{ statement.period_change|round|int }} Kč</span> </div>
-  <div>Total Expenses: <span class="red">Spent: {{ statement.expense_total|round|int }} Kč</span></div>
-  <div>Total Income: <span class="green">Gained: {{ statement.income_total|round|int }} Kč</span></div>
-  
-  <p>Expenses in categories: </p>
-  {% for category in categories %}
-    {% if statement.expense_in_categories[category.id - 1] != 0 %}
-      <table>
-        <tr>
-          <td width="10%"><img src="/static/images/{{ category.icon_name }}" width=35 class="invert"></img></td>
-          <td width="60%">{{ category.name }}</td>
-          <td width="30%" class="red">{{ statement.expense_in_categories[category.id - 1]|round|int }} Kč</td>
-        </tr>
-      </table>
-    {% endif %}
-  {% endfor %}
+<h3> {{ title }} </h3>
+<form method="post">
+  <p>{{ form.date_from.label }}: <br>{{ form.date_from() }}</p>
+  <p>{{ form.date_to.label }}: <br>{{ form.date_to() }}</p>
+  <p>{{ form.submit() }}</p>
+</form>
+<div>Total Period change: <span class="{{ 'red' if statement.period_change <= 0 else 'green' }}">{{
+    statement.period_change|round|int }} Kč</span> </div>
+<div>Total Expenses: <span class="red">{{ statement.expense_total|round|int }} Kč</span></div>
+<div>Total Income: <span class="green">{{ statement.income_total|round|int }} Kč</span></div>
 
-  <p>Incomes: </p>
-  {% for category in categories %}
-    {% if statement.income_in_categories[category.id - 1] != 0 %}
-      <table>
-        <tr>
-          <td width="10%"><img src="/static/images/{{ category.icon_name }}" width=35 class="invert"></img></td>
-          <td width="60%">{{ category.name }}</td>
-          <td width="30%" class="green">{{ statement.income_in_categories[category.id - 1]|round|int }} Kč</td>
-        </tr>
-      </table>
-    {% endif %}
-  {% endfor %}
+<p>Expenses in categories: </p>
+{% for category in categories %}
+{% if statement.expense_in_categories[category.id - 1] != 0 %}
+<table>
+  <tr>
+    <td width="10%"><img src="/static/images/{{ category.icon_name }}" width=35 class="invert"></img></td>
+    <td width="30%">{{ category.name }}</td>
+    <td width="30%">{{ statement.expense_in_categories_count[category.id - 1] }} transactions</td>
+    <td width="30%" class="red">{{ statement.expense_in_categories[category.id - 1]|round|int }} Kč</td>
+  </tr>
+</table>
+{% endif %}
+{% endfor %}
+
+<p>Incomes: </p>
+{% for category in categories %}
+{% if statement.income_in_categories[category.id - 1] != 0 %}
+<table>
+  <tr>
+    <td width="10%"><img src="/static/images/{{ category.icon_name }}" width=35 class="invert"></img></td>
+    <td width="30%">{{ category.name }}</td>
+    <td width="30%">{{ statement.income_in_categories_count[category.id - 1] }} transactions</td>
+    <td width="30%" class="green">{{ statement.income_in_categories[category.id - 1]|round|int }} Kč</td>
+  </tr>
+</table>
+{% endif %}
+{% endfor %}
 
 {% endblock %}

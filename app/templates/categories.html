@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h3> {{ title }} </h3>
-    <a href="/category/new"><button>New Category</button></a>
-    {% for category in categories %}
-    <table>
-      <tr>
-        <td width="10%"><img src="/static/images/{{ category.icon_name }}" width=35 class="invert"></td>
-        <td width="40%">{{ category.name }}</td>
-        <td width="50%" class="right_small">{{ category.description }}</td>
-      </tr>
-    </table>
-    {% endfor %}
+<h3> {{ title }} </h3>
+<a href="/category/new"><button>New Category</button></a>
+{% for category in categories %}
+<table>
+  <tr>
+    <td width="10%"><img src="/static/images/{{ category.icon_name }}" width=35 class="invert"></td>
+    <td width="40%">{{ category.name }}</td>
+    <td width="50%" class="right_small">{{ category.description }}</td>
+  </tr>
+</table>
+{% endfor %}
 {% endblock %}

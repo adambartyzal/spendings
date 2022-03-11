@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h3> {{ title }} </h3>
-  <form action="" method="post" novalidate>
-    {{ form.hidden_tag() }}
-    <p>{{ form.type_id.label }}<br>{{ form.type_id() }}</p>
-    <p>{{ form.category_id.label }}<br>{{ form.category_id() }}</p>
-    <p>{{ form.date.label }}<br>{{ form.date() }}</p>
-    <p>{{ form.name.label }}<br>{{ form.name(size=32) }}</p>
-    <p>{{ form.amount.label }}<br>{{ form.amount(size=32) }}</p>
-    <p>{{ form.submit() }}</p>
-  </form>
-  {% if edit %}
-  <p><a href="/transaction/{{ id }}/delete"><button>Delete Transaction</button></a></p>
-  {% endif %}
+<h3> {{ title }} </h3>
+<form action="" method="post" novalidate>
+  {{ form.hidden_tag() }}
+  <p>{{ form.type_id.label }}<br>{{ form.type_id() }}</p>
+  <p>{{ form.category_id.label }}<br>{{ form.category_id() }}</p>
+  <p>{{ form.date.label }}<br>{{ form.date() }}</p>
+  <p>{{ form.name.label }}<br>{{ form.name(size=32) }}</p>
+  <p>{{ form.amount.label }}<br>{{ form.amount(size=32) }}</p>
+  <p>{{ form.submit() }}</p>
+</form>
+{% if edit %}
+<p><a href="/transaction/{{ id }}/delete"><button>Delete Transaction</button></a></p>
+{% endif %}
 {% endblock %}

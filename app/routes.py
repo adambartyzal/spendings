@@ -29,15 +29,6 @@ def index():
 @app.route('/categories', methods=['GET'])
 def categories():
 
-#  with open('/home/adam/codes/spendings/transaction_spendee.csv') as csv_file:
-#    csv_reader = csv.reader(csv_file, delimiter=',')
-#    line_count = 0
-#    print('id,name,amount,timestamp,user_id,category_id,type_id,date')
-#    for row in csv_reader:
-#      transaction = Transaction(name=row[4], amount=float(row[3]), type_id=int(row[1]), category_id=int(row[2]), date=datetime.datetime.fromisoformat(row[0]))
-#      db.session.add(transaction)
-#      db.session.commit()
-
   categories = Category.query.all()
   return render_template('categories.html', title='Categories', categories=categories)
 
@@ -119,12 +110,16 @@ class Statement:
     self.expense_total = 0
     self.income_total = 0
     self.expense_in_categories = [0] * len(categories)
+    self.expense_in_categories_count = [0] * len(categories)
     self.income_in_categories = [0] * len(categories)
+    self.income_in_categories_count = [0] * len(categories)
     for transaction in transactions:
       if (transaction.type_id == 1):
         self.expense_in_categories[transaction.category_id - 1] += transaction.amount
+        self.expense_in_categories_count[transaction.category_id - 1] += 1
       if (transaction.type_id == 2):
         self.income_in_categories[transaction.category_id - 1] += transaction.amount
+        self.income_in_categories_count[transaction.category_id - 1] += 1
     self.expense_total = sum(self.expense_in_categories)
     self.income_total = sum(self.income_in_categories)
     self.period_change = self.income_total - self.expense_total
