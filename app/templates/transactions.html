@@ -6,32 +6,40 @@
   <a href="/transaction/new"><button>New Transaction</button></a>
 </div>
 <form method="post">
-  <p>{{ form.date_from.label }}:<br>{{ form.date_from() }}</p>
-  {% for transaction in transactions %}
   <table>
-    {% if loop.index0 == 0 %}
-    <tr class="gray">
-      <td>{{ transaction.date|month_text }}</td>
+    <tr>
+      <td width="50%">{{ form.date_from.label }}:</td>
+      <td>{{ form.date_to.label }}:</td>
     </tr>
-    {% elif loop.index0 > 0 and loop.previtem.date|date_only != transaction.date|date_only %}
-    <tr class="gray">
-      <td>{{ transaction.date|month_text }}</td>
-    </tr>
-    {% endif %}
-  </table>
-  <table>
-    <tr data-href="/transaction/{{ transaction.id }}">
-      <td width="10%"><img src="/static/images/{{ categories[transaction.category_id -1].icon_name }}" width=35
-          class="invert"></img></td>
-      <td>{{ transaction.name }}</td>
-      <td class="{{'red' if transaction.type_id == 1 else 'green' if transaction.type_id == 2 else 'blue'}}">{{
-        transaction.amount|round|int }} Kč</td>
+    <tr>
+      <td width="50%">{{ form.date_from() }}</td>
+      <td>{{ form.date_to() }}</td>
     </tr>
   </table>
-  {% endfor %}
-  <p>{{ form.date_to.label }}:<br>{{ form.date_to() }}</p>
-  <p>{{ form.submit() }}</p>
+  <span>{{ form.submit() }}</span>
 </form>
+{% for transaction in transactions %}
+<table>
+  {% if loop.index0 == 0 %}
+  <tr class="accent">
+    <td>{{ transaction.date|month_text }}</td>
+  </tr>
+  {% elif loop.index0 > 0 and loop.previtem.date|date_only != transaction.date|date_only %}
+  <tr class="accent">
+    <td>{{ transaction.date|month_text }}</td>
+  </tr>
+  {% endif %}
+</table>
+<table>
+  <tr data-href="/transaction/{{ transaction.id }}">
+    <td width="10%"><img src="/static/images/{{ categories[transaction.category_id -1].icon_name }}" width=35
+        class="invert"></img></td>
+    <td>{{ transaction.name }}</td>
+    <td class="{{'red' if transaction.type_id == 1 else 'green' if transaction.type_id == 2 else 'blue'}}">{{
+        transaction.amount|round|int }} Kč</td>
+  </tr>
+</table>
+{% endfor %}
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const rows = document.querySelectorAll("tr[data-href]");
